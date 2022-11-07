@@ -1,0 +1,11 @@
+.toolBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.availabilityIndicator {
+    width: 15px;
+    height: 15px;
+    background-color:  rgb(127, 208, 70);
+    border-radius: 100px;
+}

@@ -1,7 +1,6 @@
 .downloadManager {
-    width: fit-content;
+    width: 1200px;
     height: fit-content;
-    border-radius: 2px;
     box-shadow: 1px 2px 2px 3px #dddddd ;
 }
 
@@ -14,24 +13,73 @@
     margin-left: 1em;
 }
 
+
 .downloadsTable {
-    border-top: solid 1px #dddddd;
+    border: solid 1px #dddddd;
+    border-collapse: collapse;
 }
 
 .downloadsTable th {
     text-align: left;
     font-size: large;
     font-weight: 300;
-    padding: 8px 12px 6px 12px;
+    border-bottom:  solid 1px #dddddd;
 }
 
-.downloadTableItem td {
-    padding: 6px 12px;
+.downloadsTable tr {
+    height: 3em;
+}
+
+.itemCheckboxColumn {
+    width: 5%;
+    padding-left: 6px;
+}
+
+.itemNameColumn {
+    width: 10%;
+}
+.itemDeviceColumn {
+    width: 15%;
+}
+
+.itemPathColumn {
+    width: 60%;
+}
+
+.itemAvailabilityColumn {
+    width: 5%;
+}
+
+.itemStatusColumn {
+    width: 10%;
+    padding-right: 50px;
+}
+
+.downloadsTableBody tr {
+    font-size: small;
+    border-bottom:  solid 1px #dddddd;
+}
+
+.downloadsTableBody tr:hover {
+    background-color: rgb(243, 243, 243);
+    cursor: pointer;
+}
+
+.availableItem {
+    background-color: rgb(237, 237, 237);
+}
+
+.availabilityIndicatorContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .availabilityIndicator {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     background-color:  rgb(127, 208, 70);
     border-radius: 100px;
+    margin-right: 6px;
 }

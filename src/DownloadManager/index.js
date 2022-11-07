@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {createRef, useState} from "react";
 import "./style.css";
 
 const ITEM_STATUS = {
@@ -9,6 +9,8 @@ const ITEM_STATUS = {
 function DownloadManager({ data }) {
     // Load given download item data into a state
     const [downloadItems, setDownloadItems] = useState(data);
+
+    const mainCheckbox = createRef();
 
     // Update download item's "selected" value when table item is clicked
     const handleTableRowClick = (event, index) => {
@@ -25,25 +27,27 @@ function DownloadManager({ data }) {
 
     // Create table item for each download item in the data
     const downloadsTableItems = downloadItems.map( (item, index) => {
+        const availability = item.status === ITEM_STATUS.available;
+        const selected = item.selected ?? false;
         return (
             <tr
-                className="downloadTableItem"
+                className={`downloadTableItem ${selected && "availableItem"}`}
                 key={item.path}
                 onClick={event => handleTableRowClick(event, index)}>
-                <td className="itemCheckbox">
-                    <input type="checkbox" checked={item.selected ?? false} readOnly/>
+                <td className="itemCheckboxColumn">
+                    <input type="checkbox" checked={selected} readOnly/>
                 </td>
-                <td className="itemName">{item.name}</td>
-                <td className="itemDevice">{item.device}</td>
-                <td className="itemPath">{item.path}</td>
-                <td className="itemAvailabilityIndicator">
-                    {
-                        item.status === ITEM_STATUS.available
-                        ? <div className="availabilityIndicator" />
-                        : null
-                    }
+                <td className="itemNameColumn">{item.name}</td>
+                <td className="itemDeviceColumn">{item.device}</td>
+                <td className="itemPathColumn">
+                    {item.path}
                 </td>
-                <td className="itemStatus">{item.status}</td>
+                <td className="itemAvailabilityColumn">
+                    <div className="availabilityIndicatorContainer">
+                        {availability ? <div className="availabilityIndicator" /> : null}
+                    </div>
+                </td>
+                <td className="itemStatusColumn">{item.status}</td>
             </tr>
         )
     })
@@ -54,7 +58,7 @@ function DownloadManager({ data }) {
             <div className="toolBar">
                 <div className="main">
                     <label>
-                        <input type="checkbox"/>
+                        <input ref={mainCheckbox} type="checkbox"/>
                         {
                             downloadItems.length > 0
                                 ? `Selected ${downloadItems.length}` 
@@ -68,12 +72,12 @@ function DownloadManager({ data }) {
             <table className="downloadsTable">
                 <thead className="downloadsTableHeader">
                     <tr>
-                        <th className="itemCheckbox"></th>
-                        <th className="itemName">Name</th>
-                        <th className="itemDevice">Device</th>
-                        <th className="itemPath">Path</th>
-                        <th className="itemAvailabilityIndicator"></th>
-                        <th className="itemStatus">Status</th>
+                        <th className="itemCheckboxColumn"></th>
+                        <th className="itemNameColumn">Name</th>
+                        <th className="itemDeviceColumn">Device</th>
+                        <th className="itemPathColumn">Path</th>
+                        <th className="itemAvailabilityColumn"></th>
+                        <th className="itemStatusColumn">Status</th>
                     </tr>
                 </thead>
                 <tbody className="downloadsTableBody">

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import DownloadsTable from "./DownloadsTable";
-import CheckBox from "./Checkbox";
+import Checkbox from "./Checkbox";
 import { ITEM_STATUS, CHECKBOX_STATES } from "../Constants";
 import downloadIcon from "../assets/download.svg";
 import "./style.css";
@@ -91,7 +91,7 @@ function DownloadManager({downloadData}) {
         <div className="downloadManager">
             <div className="toolBar">
                 <label className="mainCheckboxLabel">
-                    <CheckBox
+                    <Checkbox
                         checkboxState={mainCheckboxState}
                         handleCheckboxChange={handleMainCheckboxChange}/>
                     <span className="mainCheckboxText">

@@ -1,30 +1,19 @@
-import React, {createRef, useEffect, useState} from "react";
-import "./style.css";
+import React, {useEffect, useState} from "react";
+import PropTypes from "prop-types";
+import DownloadsTable from "./DownloadsTable";
+import CheckBox from "./Checkbox";
+import { ITEM_STATUS, CHECKBOX_STATES } from "../Constants";
 import downloadIcon from "../assets/download.svg";
+import "./style.css";
 
-const ITEM_STATUS = {
-    available: "available",
-    scheduled: "scheduled",
-}
-
-const CHECKBOX_STATES = {
-    checked: "checked",
-    unchecked: "unchecked",
-    indeterminate: "indeterminate",
-}
-
-
-function DownloadManager({ data }) {
+function DownloadManager({downloadData}) {
     // Initialize needed states
-    const [downloadItems, setDownloadItems] = useState(data);
+    const [downloadItems, setDownloadItems] = useState(downloadData);
     const [selectedTotal, setSelectedTotal] = useState(0);
     const [mainCheckboxState, setMainCheckboxState] = useState(CHECKBOX_STATES.unchecked);
 
-    const mainCheckbox = createRef();
-
-
     // Update download item's "selected" value when table item is clicked
-    const handleTableRowClick = (index) => {
+    const handleRowClick = (index) => {
         // Disallow selection of non-available items
         if (downloadItems[index].status !== ITEM_STATUS.available) {
             return null;
@@ -90,58 +79,21 @@ function DownloadManager({ data }) {
     useEffect(() => {
         if (selectedTotal === downloadItems.length) {
             setMainCheckboxState(CHECKBOX_STATES.checked);
-            mainCheckbox.current.checked = true;
-            mainCheckbox.current.indeterminate = false;
         } else if (selectedTotal === 0) {
             setMainCheckboxState(CHECKBOX_STATES.unchecked);
-            mainCheckbox.current.checked = false;
-            mainCheckbox.current.indeterminate = false;
         } else {
             setMainCheckboxState(CHECKBOX_STATES.indeterminate);
-            mainCheckbox.current.checked = false;
-            mainCheckbox.current.indeterminate = true;
         }
-    }, [selectedTotal, downloadItems, mainCheckbox]);
-
-
-    // Create a table item for each download item in the data
-    const downloadsTableItems = downloadItems.map( (item, index) => {
-        const availability = item.status === ITEM_STATUS.available;
-        const selected = item.selected ?? false;
-        // TODO: consider using i18n here instead
-        const formattedStatus = item.status[0].toUpperCase() + item.status.slice(1).toLowerCase();
-        return (
-            <tr
-                className={`downloadTableItem ${selected && "availableItem"}`}
-                key={item.path}
-                onClick={() => handleTableRowClick(index)}>
-                <td className="itemCheckboxColumn">
-                    <input type="checkbox" checked={selected} readOnly/>
-                </td>
-                <td className="itemNameColumn">{item.name}</td>
-                <td className="itemDeviceColumn">{item.device}</td>
-                <td className="itemPathColumn">
-                    {item.path}
-                </td>
-                <td className="itemAvailabilityColumn">
-                    <div className="availabilityIndicatorContainer">
-                        {availability ? <div className="availabilityIndicator" /> : null}
-                    </div>
-                </td>
-                <td className="itemStatusColumn">{formattedStatus}</td>
-            </tr>
-        )
-    })
+    }, [selectedTotal, downloadItems]);
 
 
     return (
-        <div className="downloadManager" >
+        <div className="downloadManager">
             <div className="toolBar">
-                <label className="mainCheckbox">
-                    <input
-                        ref={mainCheckbox}
-                        type="checkbox"
-                        onChange={() => handleMainCheckboxChange()}/>
+                <label className="mainCheckboxLabel">
+                    <CheckBox
+                        checkboxState={mainCheckboxState}
+                        handleCheckboxChange={handleMainCheckboxChange}/>
                     <span className="mainCheckboxText">
                         {
                             selectedTotal > 0
@@ -158,23 +110,15 @@ function DownloadManager({ data }) {
                 </div>
             </div>
 
-            <table className="downloadsTable">
-                <thead className="downloadsTableHeader">
-                    <tr>
-                        <th className="itemCheckboxColumn"></th>
-                        <th className="itemNameColumn">Name</th>
-                        <th className="itemDeviceColumn">Device</th>
-                        <th className="itemPathColumn">Path</th>
-                        <th className="itemAvailabilityColumn"></th>
-                        <th className="itemStatusColumn">Status</th>
-                    </tr>
-                </thead>
-                <tbody className="downloadsTableBody">
-                    {downloadsTableItems}
-                </tbody>
-            </table>
+            <DownloadsTable
+                downloadItems={downloadItems}
+                handleRowClick={handleRowClick}/>
         </div>
     )
+}
+
+DownloadManager.propTypes = {
+    downloadData: PropTypes.array
 }
 
 export default DownloadManager;

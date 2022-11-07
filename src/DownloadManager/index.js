@@ -1,31 +1,63 @@
 import React, {createRef, useState} from "react";
 import "./style.css";
+import downloadIcon from "../assets/download.svg";
 
 const ITEM_STATUS = {
     available: "available",
     scheduled: "scheduled",
 }
 
+const CHECKBOX_STATES = {
+    checked: "checked",
+    unchecked: "unchecked",
+    indeterminate: "indeterminate",
+}
+
 function DownloadManager({ data }) {
     // Load given download item data into a state
     const [downloadItems, setDownloadItems] = useState(data);
+    const [selectedNumberTotal, setselectedNumberTotal] = useState(0);
+    const [mainCheckboxState, setMainCheckboxState] = useState(CHECKBOX_STATES.unchecked);
 
     const mainCheckbox = createRef();
 
     // Update download item's "selected" value when table item is clicked
-    const handleTableRowClick = (event, index) => {
+    const handleTableRowClick = (index) => {
+        // Disallow selecting of unavailable items
+        if (downloadItems[index].status !== ITEM_STATUS.available) {
+            return null;
+        }
+
         const newDownloadItems = [...downloadItems];
+        const newSelectedValue = !downloadItems[index].selected;
         newDownloadItems[index] =
         {
             ...downloadItems[index],
-            selected: !downloadItems[index].selected
+            selected: newSelectedValue
         };
+
+        // Update number of total selected items
+        if (newSelectedValue) {
+            setselectedNumberTotal(selectedNumberTotal + 1);
+        } else {
+            setselectedNumberTotal(selectedNumberTotal - 1);
+        }
 
         setDownloadItems(newDownloadItems);
     }
 
+    // Handle downloading for the user
+    const handleDownloadButtonClick = () => {
+        let selectedItems = "Files selected for download: \n";
+        downloadItems.forEach(item => {
+            if (item.selected) {
+                selectedItems = selectedItems.concat(`• Device: ${item.device}, Path: ${item.path} \n`)
+            }
+        });
+        alert(selectedItems);
+    }
 
-    // Create table item for each download item in the data
+    // Create a table item for each download item in the data
     const downloadsTableItems = downloadItems.map( (item, index) => {
         const availability = item.status === ITEM_STATUS.available;
         const selected = item.selected ?? false;
@@ -33,7 +65,7 @@ function DownloadManager({ data }) {
             <tr
                 className={`downloadTableItem ${selected && "availableItem"}`}
                 key={item.path}
-                onClick={event => handleTableRowClick(event, index)}>
+                onClick={() => handleTableRowClick(index)}>
                 <td className="itemCheckboxColumn">
                     <input type="checkbox" checked={selected} readOnly/>
                 </td>
@@ -56,17 +88,22 @@ function DownloadManager({ data }) {
     return (
         <div className="downloadManager" >
             <div className="toolBar">
-                <div className="main">
-                    <label>
-                        <input ref={mainCheckbox} type="checkbox"/>
+                <label className="mainCheckbox">
+                    <input ref={mainCheckbox} type="checkbox"/>
+                    <span className="mainCheckboxText">
                         {
-                            downloadItems.length > 0
-                                ? `Selected ${downloadItems.length}` 
+                            selectedNumberTotal > 0
+                                ? `Selected ${selectedNumberTotal}` 
                                 : "None Selected"
                         }
-                    </label>
+                    </span>
+                </label>
+                <div
+                    className="downloadButton"
+                    onClick={() => handleDownloadButtonClick()}>
+                    <img className="downloadIcon" src={downloadIcon} alt="Download icon"/>
+                    Download Selected
                 </div>
-                <div className="downloadButton">Download Selected</div>
             </div>
 
             <table className="downloadsTable">

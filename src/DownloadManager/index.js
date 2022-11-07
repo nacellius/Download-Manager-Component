@@ -1,28 +1,44 @@
 import React, {useState} from "react";
 import "./style.css";
 
-function DownloadManager({ data }) {
+const ITEM_STATUS = {
+    available: "available",
+    scheduled: "scheduled",
+}
 
+function DownloadManager({ data }) {
+    // Load given download item data into a state
     const [downloadItems, setDownloadItems] = useState(data);
 
-    const handleTableRowClick = (event) => {
-        console.log(event);
-        // TODO: handle row click selection
+    // Update download item's "selected" value when table item is clicked
+    const handleTableRowClick = (event, index) => {
+        const newDownloadItems = [...downloadItems];
+        newDownloadItems[index] =
+        {
+            ...downloadItems[index],
+            selected: !downloadItems[index].selected
+        };
+
+        setDownloadItems(newDownloadItems);
     }
-    
-    const downloadsTableItems = downloadItems.map( (item) => {
+
+
+    // Create table item for each download item in the data
+    const downloadsTableItems = downloadItems.map( (item, index) => {
         return (
             <tr
                 className="downloadTableItem"
                 key={item.path}
-                onClick={event => handleTableRowClick(event)}>
-                <td className="itemCheckbox"><input type="checkbox" value={item.selected ?? false}/></td>
+                onClick={event => handleTableRowClick(event, index)}>
+                <td className="itemCheckbox">
+                    <input type="checkbox" checked={item.selected ?? false} readOnly/>
+                </td>
                 <td className="itemName">{item.name}</td>
                 <td className="itemDevice">{item.device}</td>
                 <td className="itemPath">{item.path}</td>
                 <td className="itemAvailabilityIndicator">
                     {
-                        item.status === "available"
+                        item.status === ITEM_STATUS.available
                         ? <div className="availabilityIndicator" />
                         : null
                     }
@@ -32,12 +48,13 @@ function DownloadManager({ data }) {
         )
     })
 
+
     return (
         <div className="downloadManager" >
             <div className="toolBar">
-                <div className="selectedItems">
+                <div className="main">
                     <label>
-                        <input type="checkbox" />
+                        <input type="checkbox"/>
                         {
                             downloadItems.length > 0
                                 ? `Selected ${downloadItems.length}` 
@@ -45,7 +62,7 @@ function DownloadManager({ data }) {
                         }
                     </label>
                 </div>
-                <div className="downloadSelected">Download Selected</div>
+                <div className="downloadButton">Download Selected</div>
             </div>
 
             <table className="downloadsTable">

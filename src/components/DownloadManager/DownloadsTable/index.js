@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ITEM_STATUS } from "../../Constants";
+import { ITEM_STATUS } from "../../../Constants";
 import "./style.css";
 
 function DownloadsTable({downloadItems, handleRowClick}) {
@@ -10,12 +10,14 @@ function DownloadsTable({downloadItems, handleRowClick}) {
         const itemAvailable = item.status === ITEM_STATUS.available;
         const itemSelected = item.selected ?? false;
         // TODO: should we consider using i18n here instead?
-        const formattedStatus = item.status[0].toUpperCase() + item.status.slice(1).toLowerCase();
+        const formattedStatus = item.status && item.status[0].toUpperCase()
+            + item.status.slice(1).toLowerCase();
 
         return (
             <tr
                 className={`downloadTableItem ${itemSelected && "selectedItem"} ${!itemAvailable && "disabledItem"}`}
                 key={item.path}
+                data-testid={"downloadTableRow" + item.path}
                 tabIndex="0"
                 role="button"
                 aria-disabled={!itemAvailable}
@@ -23,6 +25,7 @@ function DownloadsTable({downloadItems, handleRowClick}) {
                 <td className="itemCheckboxColumn">
                     <input
                         id={itemCheckboxId}
+                        data-testid={"downloadTableRowCheckbox" + item.path}
                         type="checkbox"
                         checked={itemSelected}
                         disabled={!itemAvailable}
@@ -45,7 +48,7 @@ function DownloadsTable({downloadItems, handleRowClick}) {
                         {itemAvailable ? <div className="availabilityIndicator"/> : null}
                     </div>
                 </td>
-                <td className="itemStatusColumn">
+                <td className="itemStatusColumn" data-testid={"itemStatusColumn" + item.path} >
                    {formattedStatus}
                 </td>
             </tr>

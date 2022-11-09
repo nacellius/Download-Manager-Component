@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import DownloadManager from './DownloadManager';
+import DownloadManager from './components/DownloadManager';
 
 function App() {
 

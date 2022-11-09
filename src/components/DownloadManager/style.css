@@ -13,7 +13,7 @@
     align-items: center;
 }
 
-.mainCheckboxLabel {
+.selectAllCheckboxLabel {
     height: 100%;
     width: 15%;
     min-width: 100px;
@@ -23,7 +23,7 @@
     align-items: center;
 }
 
-.mainCheckboxText {
+.selectAllCheckboxText {
     margin-left: 1em;
 }
 

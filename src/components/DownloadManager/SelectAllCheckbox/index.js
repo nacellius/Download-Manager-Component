@@ -1,8 +1,8 @@
 import React, {createRef, useEffect} from "react";
 import PropTypes from "prop-types";
-import { CHECKBOX_STATES } from "../../Constants";
+import { CHECKBOX_STATES } from "../../../Constants";
 
-function Checkbox({ checkboxState, handleCheckboxChange }) {
+function SelectAllCheckbox({ checkboxState, handleCheckboxChange }) {
     const checkbox = createRef();
 
     // Update the checkbox's "checked" and "indeterminate" properties when checkboxState is updated
@@ -27,15 +27,16 @@ function Checkbox({ checkboxState, handleCheckboxChange }) {
         <>
             <input
                 ref={checkbox}
+                data-testid="selectAllCheckbox"
                 type="checkbox"
                 onChange={() => handleCheckboxChange()}/>
         </>
     )
 }
 
-Checkbox.propTypes = {
+SelectAllCheckbox.propTypes = {
     checkboxState: PropTypes.string,
     handleCheckboxChange: PropTypes.func,
 }
 
-export default Checkbox;
+export default SelectAllCheckbox;

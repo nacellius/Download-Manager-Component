@@ -1,19 +1,41 @@
 import React, {useEffect, useState, useRef} from "react";
 import PropTypes from "prop-types";
 import DownloadsTable from "./DownloadsTable";
-import Checkbox from "./Checkbox";
-import { ITEM_STATUS, CHECKBOX_STATES } from "../Constants";
-import downloadIcon from "../assets/download.svg";
+import SelectAllCheckbox from "./SelectAllCheckbox";
+import { ITEM_STATUS, CHECKBOX_STATES } from "../../Constants";
 import "./style.css";
+import downloadIcon from "../../assets/download.svg";
 
 function DownloadManager({downloadData}) {
     // Initialize needed states
     const [downloadItems, setDownloadItems] = useState(downloadData);
     const [selectedTotal, setSelectedTotal] = useState(0);
-    const [mainCheckboxState, setMainCheckboxState] = useState(CHECKBOX_STATES.unchecked);
+    const [selectAllCheckboxState, setSelectAllCheckboxState] = useState(CHECKBOX_STATES.unchecked);
     let totalAvailable = useRef(null);
 
-    // Update download item's "selected" value when table item is clicked
+    // Initialize total number of available items
+    useEffect(() => {
+        totalAvailable.current = 0;
+        downloadItems.forEach(item => {
+            if (item.status === ITEM_STATUS.available) {
+                totalAvailable.current = totalAvailable.current + 1;
+            }
+        });
+    }, [])
+
+    // Update the main checkbox's "checked" and "indeterminate" properties whenever
+    // an item is selected/unselected
+    useEffect(() => {
+        if (selectedTotal === totalAvailable.current) {
+            setSelectAllCheckboxState(CHECKBOX_STATES.checked);
+        } else if (selectedTotal === 0) {
+            setSelectAllCheckboxState(CHECKBOX_STATES.unchecked);
+        } else {
+            setSelectAllCheckboxState(CHECKBOX_STATES.indeterminate);
+        }
+    }, [selectedTotal, downloadItems]);
+
+    // Update download item's "selected" value when a table item is clicked
     const handleRowClick = (index) => {
         // Disallow selection of non-available items
         if (downloadItems[index].status !== ITEM_STATUS.available) {
@@ -53,12 +75,12 @@ function DownloadManager({downloadData}) {
     }
 
     // Handle main checkbox clicks
-    const handleMainCheckboxChange = () => {
+    const handleSelectAllCheckboxChange = () => {
         let newDownloadItems = [];
         let newselectedTotal = 0;
 
         // De-select all items if all are selected
-        if (mainCheckboxState !== CHECKBOX_STATES.checked) {
+        if (selectAllCheckboxState !== CHECKBOX_STATES.checked) {
             downloadItems.forEach(item => {
                 // only select available items 
                 if (item.status === ITEM_STATUS.available) {
@@ -80,37 +102,17 @@ function DownloadManager({downloadData}) {
         setDownloadItems(newDownloadItems);
     }
 
-    // Update the main checkbox's "checked" and "indeterminate" properties whenever
-    // an item is selected/unselected
-    useEffect(() => {
-        if (selectedTotal === totalAvailable.current) {
-            setMainCheckboxState(CHECKBOX_STATES.checked);
-        } else if (selectedTotal === 0) {
-            setMainCheckboxState(CHECKBOX_STATES.unchecked);
-        } else {
-            setMainCheckboxState(CHECKBOX_STATES.indeterminate);
-        }
-    }, [selectedTotal, downloadItems]);
-
-    // Initialize total number of available items
-    useEffect(() => {
-        totalAvailable.current = 0;
-        downloadItems.forEach(item => {
-            if (item.status === ITEM_STATUS.available) {
-                totalAvailable.current = totalAvailable.current + 1;
-            }
-        });
-    }, [])
-
 
     return (
         <div className="downloadManager">
             <div className="toolBar">
-                <label className="mainCheckboxLabel">
-                    <Checkbox
-                        checkboxState={mainCheckboxState}
-                        handleCheckboxChange={handleMainCheckboxChange}/>
-                    <span className="mainCheckboxText">
+                <label className="selectAllCheckboxLabel">
+                    <SelectAllCheckbox
+                        checkboxState={selectAllCheckboxState}
+                        handleCheckboxChange={handleSelectAllCheckboxChange}/>
+                    <span
+                        className="selectAllCheckboxText"
+                        data-testid="selectAllCheckboxText">
                         {
                             selectedTotal > 0
                                 ? `Selected ${selectedTotal}` 
@@ -120,6 +122,7 @@ function DownloadManager({downloadData}) {
                 </label>
                 <button
                     className="downloadButton"
+                    data-testid="downloadButton"
                     disabled={selectedTotal === 0}
                     onClick={() => handleDownloadButtonClick()}>
                     <img className="downloadIcon" src={downloadIcon} alt="Download icon"/>

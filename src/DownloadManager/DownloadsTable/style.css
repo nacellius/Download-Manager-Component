@@ -23,13 +23,21 @@
 }
 
 .downloadsTableBody tr:hover {
-    background-color: rgb(243, 243, 243);
+    background-color: rgb(245, 245, 245);
 }
 
+.hiddenAccessibilityLabel {
+    position: absolute;
+    left: -10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
 
 .itemCheckboxColumn {
     width: 5%;
-    padding-left: 6px;
+    padding-left: 8px;
 }
 
 .itemNameColumn {
@@ -69,4 +77,14 @@
 
 .selectedItem {
     background-color: rgb(237, 237, 237);
+}
+
+.downloadTableItem.disabledItem * {
+    opacity: .6;
+    cursor: not-allowed;
+    
+}
+
+.downloadTableItem.disabledItem:hover {
+    background-color: rgba(0, 0, 0, .05);
 }

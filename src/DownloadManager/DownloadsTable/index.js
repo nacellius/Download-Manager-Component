@@ -6,30 +6,48 @@ import "./style.css";
 function DownloadsTable({downloadItems, handleRowClick}) {
     // Create a table item for each download item in the given data
     const downloadsTableItems = downloadItems.map( (item, index) => {
-        const availability = item.status === ITEM_STATUS.available;
-        const selected = item.selected ?? false;
+        const itemCheckboxId = "downloadItemCheckbox" + index;
+        const itemAvailable = item.status === ITEM_STATUS.available;
+        const itemSelected = item.selected ?? false;
         // TODO: should we consider using i18n here instead?
         const formattedStatus = item.status[0].toUpperCase() + item.status.slice(1).toLowerCase();
 
         return (
             <tr
-                className={`downloadTableItem ${selected && "selectedItem"}`}
+                className={`downloadTableItem ${itemSelected && "selectedItem"} ${!itemAvailable && "disabledItem"}`}
                 key={item.path}
+                tabIndex="0"
+                role="button"
+                aria-disabled={!itemAvailable}
                 onClick={() => handleRowClick(index)}>
                 <td className="itemCheckboxColumn">
-                    <input type="checkbox" checked={selected} readOnly/>
+                    <input
+                        id={itemCheckboxId}
+                        type="checkbox"
+                        checked={itemSelected}
+                        disabled={!itemAvailable}
+                        readOnly/>
+                   <label className="hiddenAccessibilityLabel" htmlFor={itemCheckboxId}>
+                       Checkbox for item {item.name} with path {item.path} on device {item.device}
+                   </label>
                 </td>
-                <td className="itemNameColumn">{item.name}</td>
-                <td className="itemDeviceColumn">{item.device}</td>
+                <td className="itemNameColumn">
+                    {item.name}
+                </td>
+                <td className="itemDeviceColumn">
+                    {item.device}
+                </td>
                 <td className="itemPathColumn">
                     {item.path}
                 </td>
                 <td className="itemAvailabilityColumn">
                     <div className="availabilityIndicatorContainer">
-                        {availability ? <div className="availabilityIndicator"/> : null}
+                        {itemAvailable ? <div className="availabilityIndicator"/> : null}
                     </div>
                 </td>
-                <td className="itemStatusColumn">{formattedStatus}</td>
+                <td className="itemStatusColumn">
+                   {formattedStatus}
+                </td>
             </tr>
         )
     })
@@ -39,11 +57,11 @@ function DownloadsTable({downloadItems, handleRowClick}) {
         <table className="downloadsTable">
         <thead>
             <tr>
-                <th className="itemCheckboxColumn"></th>
+                <th className="itemCheckboxColumn" aria-label="CheckboxColumn"></th>
                 <th className="itemNameColumn">Name</th>
                 <th className="itemDeviceColumn">Device</th>
                 <th className="itemPathColumn">Path</th>
-                <th className="itemAvailabilityColumn"></th>
+                <th className="itemAvailabilityColumn" aria-label="AvailabilityIndicator"></th>
                 <th className="itemStatusColumn">Status</th>
             </tr>
         </thead>

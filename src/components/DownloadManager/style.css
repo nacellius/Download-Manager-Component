@@ -1,0 +1,54 @@
+.downloadManager {
+    width: 1200px;
+    height: fit-content;
+    box-shadow: 1px 2px 2px 3px rgba(0, 0, 0, 0.3) ;
+    background-color: white;
+}
+
+.toolBar {
+    height: 3em;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.selectAllCheckboxLabel {
+    height: 100%;
+    width: 15%;
+    min-width: 100px;
+    padding-left: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.selectAllCheckboxText {
+    margin-left: 1em;
+}
+
+.downloadButton {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: medium;
+}
+
+.downloadButton:hover {
+    background-color: rgb(243, 243, 243);
+}
+
+.downloadButton:disabled {
+    color: black;
+    opacity: .6;
+}
+
+.downloadIcon {
+    height: 1em;
+    margin-right: 6px;
+}

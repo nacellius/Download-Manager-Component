@@ -1,0 +1,90 @@
+.downloadsTable {
+    width: 100%;
+    border: solid 1px #dddddd;
+    border-collapse: collapse;
+}
+
+.downloadsTable th {
+    text-align: left;
+    font-size: large;
+    font-weight: 300;
+    border-bottom:  solid 1px #dddddd;
+    padding-top: .25em;
+}
+
+.downloadsTable tr {
+    height: 3em;
+}
+
+.downloadsTableBody tr {
+    font-size: small;
+    border-bottom:  solid 1px #dddddd;
+    cursor: pointer;
+}
+
+.downloadsTableBody tr:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+.hiddenAccessibilityLabel {
+    position: absolute;
+    left: -10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
+
+.itemCheckboxColumn {
+    width: 5%;
+    padding-left: 8px;
+}
+
+.itemNameColumn {
+    width: 15%;
+}
+.itemDeviceColumn {
+    width: 15%;
+}
+
+.itemPathColumn {
+    width: 50%;
+}
+
+.itemAvailabilityColumn {
+    width: 5%;
+}
+
+.itemStatusColumn {
+    width: 10%;
+    padding-right: 50px;
+}
+
+.availabilityIndicatorContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.availabilityIndicator {
+    width: 18px;
+    height: 18px;
+    background-color:  rgb(127, 208, 70);
+    border-radius: 100px;
+    margin-right: 6px;
+}
+
+.selectedItem {
+    background-color: rgb(237, 237, 237);
+}
+
+.downloadTableItem.disabledItem * {
+    opacity: .6;
+    cursor: not-allowed;
+    
+}
+
+.downloadTableItem.disabledItem:hover {
+    background-color: rgba(0, 0, 0, .05);
+}
